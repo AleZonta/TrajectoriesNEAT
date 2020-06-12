@@ -25,6 +25,8 @@ from pathlib import Path
 import numpy as np
 from tqdm import trange
 
+from src.Settings.arguments import args
+
 
 class GenomeMeaning(object):
     """
@@ -63,8 +65,7 @@ class GenomeMeaning(object):
         :return:
         """
         # loading coordinates
-        root = os.path.dirname(os.path.abspath(__file__))
-        phenotype_file = root.replace("Helpers", "") + "/Data/Phenotype"
+        phenotype_file = args.data_directory + "/Phenotype"
         with open(phenotype_file, 'r') as f:
             self._types = json.load(f)
         if self._log is not None:
@@ -86,63 +87,17 @@ class GenomeMeaning(object):
 
             self._log.warning("Code commented for performances, enable it if needed")
 
-        root = os.path.dirname(os.path.abspath(__file__))
-        mmap_file = root.replace("Helpers", "") + "Data/name_and_position.dat"
-        if os.path.isfile(mmap_file):
-            if self._log is not None:
-                self._log.debug("mmap file exist, loading it")
+        mmap_file = args.data_directory + "name_and_position.dat"
 
-            self.name_and_position = np.memmap(mmap_file, dtype='float32', mode='r', shape=(56, 938737, 2))
+        self.name_and_position = np.memmap(mmap_file, dtype='float32', mode='r', shape=(56, 938737, 2))
 
-            with open('{}Data/order_on_mmap.pickle'.format(root.replace("Helpers", "")), 'rb') as handle:
-                self._order_name_and_position = pickle.load(handle)
+        with open('{}/order_on_mmap.pickle'.format(args.data_directory), 'rb') as handle:
+            self._order_name_and_position = pickle.load(handle)
 
-            with open('{}Data/name_typology.pickle'.format(root.replace("Helpers", "")), 'rb') as handle:
-                self.name_typologies = pickle.load(handle)
-            self.method_mmap = True
-        else:
-            self.name_and_position = {}
-            for name in self.name_typologies:
-                lowercase_name = name.lower()
-                root = os.path.dirname(os.path.abspath(__file__))
-                data_file = root.replace("Loaders", "") + "/Data/"
-                if test:
-                    name_file = data_file + lowercase_name + "_test.csv"
-                else:
-                    name_file = data_file + lowercase_name + ".csv"
-                my_file = Path(name_file)
-                if my_file.is_file():
+        with open('{}/name_typology.pickle'.format(args.data_directory), 'rb') as handle:
+            self.name_typologies = pickle.load(handle)
+        self.method_mmap = True
 
-                    list_word_accepted = self.name_and_details[lowercase_name]
-                    list_word_accepted_fixed = []
-                    for word in list_word_accepted:
-                        if word == "others":
-                            word = "others_" + name
-                        list_word_accepted_fixed.append(word)
-                        self.link_main_obj_and_small_objs.update({word: name})
-                    self.list_of_names_per_genome.extend(list_word_accepted_fixed)
-
-                    # file exist
-                    with open(name_file) as csvfile:
-                        reader = csv.DictReader(csvfile)
-                        dic = {}
-
-                        for row in reader:
-                            name_element = row["names"].lower()
-
-                            if name_element in list_word_accepted:
-                                okay_id = name_element
-                            else:
-                                okay_id = "others_" + name
-
-                            if row["x"] != "":
-                                dic.setdefault(okay_id, []).append((float(row["x"]), float(row["y"])))
-
-                        self.name_and_position.update({lowercase_name: dic})
-                else:
-                    if self._log is not None:
-                        self._log.debug("File {} not present in folder. Please provide it".format(name_file))
-                    raise ValueError("File {} not present in folder. Please provide it".format(name_file))
 
         if self._log is not None:
             self._log.info("Coordinates loaded!")

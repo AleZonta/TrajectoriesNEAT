@@ -73,16 +73,16 @@ class PopulationWithNovelty(Population):
             # Evaluate all genomes using the user-provided function.
             fitness_function(list(iteritems(self.population)), (self.config, self._archive))
 
-            data_to_save = []
-            for ind in self.population:
-                data_to_save.append([self.population[ind].real_fitness,
-                                     self.population[ind].behaviour,
-                                     self.population[ind].novelty_score,
-                                     self.population[ind].fitness,
-                                     self.population[ind].variances_good_trajectories,
-                                     self.population[ind].all_the_data])
-            with open("{}population_and_fitness_generation_{}.pkl".format(self._output_directory, k), "wb") as cp_file:
-                pickle.dump(data_to_save, cp_file, protocol=pickle.HIGHEST_PROTOCOL)
+            # data_to_save = []
+            # for ind in self.population:
+            #     data_to_save.append([self.population[ind].real_fitness,
+            #                          self.population[ind].behaviour,
+            #                          self.population[ind].novelty_score,
+            #                          self.population[ind].fitness,
+            #                          self.population[ind].variances_good_trajectories,
+            #                          self.population[ind].all_the_data])
+            # with open("{}population_and_fitness_generation_{}.pkl".format(self._output_directory, k), "wb") as cp_file:
+            #     pickle.dump(data_to_save, cp_file, protocol=pickle.HIGHEST_PROTOCOL)
 
             # Gather and report statistics.
             best = None

@@ -23,7 +23,7 @@ from src.Fitness.GeneralFitness import compute_general_fitness
 from src.Helpers.APF import LoadAPF
 from src.Helpers.Division.ComputeDivision import SubMatrix
 from src.Helpers.GenomePhenome import GenomeMeaning
-from src.Settings.utils import args
+from src.Settings.arguments import args
 
 
 def worker_job_lib_behaviours(starting_point, genome, config, point_distance, multipliers, output_dir, name, i):

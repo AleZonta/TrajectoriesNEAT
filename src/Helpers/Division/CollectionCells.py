@@ -18,6 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import numpy as np
 import warnings
 
+from src.Settings.arguments import args
+
 warnings.simplefilter(action='ignore', category=FutureWarning)
 import os
 
@@ -59,14 +61,10 @@ class CollectionCells(object):
         """
         if not self._save_and_store:
             return False
-        root = os.path.dirname(os.path.abspath(__file__))
-        output_folder = root.replace("Helpers/Division", "Data")
         # output_folder = "/Volumes/Cthulhu/MacDataPycharmProjects/GTEA/Data/Division/"
         name_file = "{}_{}_by_{}_dict_version".format(name, self._x_division, self._y_division)
-        if os.path.isfile("{}/{}.pickle".format(output_folder, name_file)):
-            self._list_cells = pickle.load(open("{}/{}.pickle".format(output_folder, name_file), 'rb'))
-
-
+        if os.path.isfile("{}/{}.pickle".format(args.data_directory, name_file)):
+            self._list_cells = pickle.load(open("{}/{}.pickle".format(args.data_directory, name_file), 'rb'))
             return True
         return False
 
@@ -127,10 +125,8 @@ class CollectionCells(object):
         #         return cell
 
     def load_mmap_data(self, not_normalised=False):
-        root = os.path.dirname(os.path.abspath(__file__))
-        output_folder = root.replace("Helpers", "Data").replace("Division", "")
         if not_normalised:
-            name_file = "{}/cell_data_to_mmap.dat".format(output_folder)
+            name_file = "{}/cell_data_to_mmap.dat".format(args.data_directory)
 
             data_input = np.memmap(name_file, dtype='float32', mode='r', shape=(154, 155, 6, 2, 1600))
             # data_input = np.nan_to_num(data_input)
@@ -138,7 +134,7 @@ class CollectionCells(object):
             self.max_values = 62230.51
             # data_input = scale(data_input, -1, 1)
         else:
-            name_file = "{}/cell_data_to_mmap_normalised.dat".format(output_folder)
+            name_file = "{}/cell_data_to_mmap_normalised.dat".format(args.data_directory)
             data_input = np.memmap(name_file, dtype='float32', mode='r', shape=(154, 155, 6, 2, 1600))
         count = 0
         for k, cell in self._list_cells.items():
@@ -146,7 +142,7 @@ class CollectionCells(object):
             cell.index = count
             count += 1
 
-        name_file = "{}/indexing_fast.dat".format(output_folder)
+        name_file = "{}/indexing_fast.dat".format(args.data_directory)
         ndexing = np.memmap(name_file, dtype='int16', mode='r', shape=(6159, 6083, 2))
         for k, cell in self._list_cells.items():
             cell._indexing = ndexing

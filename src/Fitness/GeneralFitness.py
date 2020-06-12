@@ -24,8 +24,8 @@ from scipy.spatial import distance
 import itertools
 
 from src.Fitness.ValueGraphFitness import VAL_NO_DATA, LIMIT_TIMESTEPS, convert, MAX_FITNESS, MAX_TOTAL_FITNESS, \
-    get_fitness_value
-from src.Helpers.Funcs import list_neighbours
+    get_fitness_value, get_next_point
+from src.Helpers.Funcs import list_neighbours, _get_direction
 from src.Helpers.Point import Point
 
 PRE_DEFINED_BEHAVIOURS_ALL = list(set(itertools.permutations([-1, -1, -1, -1, -0.011, 1])))
@@ -129,13 +129,6 @@ def compute_general_fitness(net, number_to_generate, real_tra, apf, sub_matrix, 
                     all_the_charges.extend([float(VAL_NO_DATA) for _ in range(6)])
                     final_with_additional.append(VAL_NO_DATA)
             all_the_charges.extend(final_with_additional)
-
-            # all_the_charges = []
-            # for p in points:
-            #     if p in points_on_the_street:
-            #         all_the_charges.append(1)
-            #     else:
-            #         all_the_charges.append(VAL_NO_DATA)
 
             # add count of timesteps already moved
             all_the_charges.append(convert(old_max=LIMIT_TIMESTEPS, old_min=0,

@@ -37,22 +37,18 @@ from src.Helpers.APF import LoadAPF
 from src.Helpers.Division.ComputeDivision import SubMatrix
 from src.Helpers.GenomePhenome import GenomeMeaning
 
-from src.Settings.utils import args
+from src.Settings.arguments import args
 
 
 def eval_genomes(genome, config):
     number_of_tra_to_generate = args.numb_of_tra
 
-    root = os.path.dirname(os.path.abspath(__file__))
-    path = root.replace("Algorithms", "") + "/Data/"
-    loader_apf = LoadAPF(path="{}/the_right_one_fast".format(path),
+    loader_apf = LoadAPF(path="{}/the_right_one_fast".format(args.data_directory),
                          logger=None)
     loader_apf.load_apf_only_routing_system()
     loader_apf.match_index_with_coordinates()
 
-    root = os.path.dirname(os.path.abspath(__file__))
-    path = root.replace("Algorithms", "") + "/Data/"
-    real_tra_train = np.load("{}/real_tra_train_starting_points.npy".format(path), allow_pickle=True)
+    real_tra_train = np.load("{}/real_tra_train_starting_points.npy".format(args.data_directory), allow_pickle=True)
 
     net = neat.nn.FeedForwardNetwork.create(genome, config)
 
@@ -64,7 +60,7 @@ def eval_genomes(genome, config):
                            values_matrix=(loader_apf.x_values, loader_apf.y_values))
     sub_matrix.divide_into_cells()
 
-    fitness_landscape = pickle.load(open("{}/3d_fitness_in_2d_with_limitation.pickle".format(path), 'rb'))
+    fitness_landscape = pickle.load(open("{}/3d_fitness_in_2d_with_limitation.pickle".format(args.data_directory), 'rb'))
 
     # fitness_total = []
     # behaviour_total = []
@@ -170,7 +166,7 @@ class neatAlgorithm(object):
             self._log.debug("Error occurred in testing the winning genome. Operation Aborted")
             self._log.debug(e)
         try:
-            self.test_winning_genome_attraction_scales(individual=winner)
+            self.test_winning_genome_attraction_scales(individual=winner, output_dir=self._output_directory)
         except Exception as e:
             self._log.debug("Error occurred in testing the attraction. Operation Aborted")
             self._log.debug(e)

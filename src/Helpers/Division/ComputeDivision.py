@@ -20,12 +20,11 @@ import sys
 import os
 
 from haversine import haversine
-# import seaborn as sns
 
 import numpy as np
-import warnings
 
-warnings.simplefilter(action='ignore', category=FutureWarning)
+from src.Settings.arguments import args
+
 from src.Helpers.Division.CollectionCells import CollectionCells
 
 
@@ -39,9 +38,7 @@ class SubMatrix(object):
         self._save_and_store = save_and_store
         self._values_matrix = values_matrix
 
-        root = os.path.dirname(os.path.abspath(__file__))
-        data_folder = root.replace("Helpers/Division", "Data")
-        name_file = "{}/matrix_id_matrix_mmap.dat".format(data_folder)
+        name_file = "{}/matrix_id_matrix_mmap.dat".format(args.data_directory)
         self._coordinate_index = np.memmap(name_file, dtype='int8', mode='r', shape=(6159, 6201, 2))
 
     def divide_into_cells(self, x_division=40, y_division=40, not_normalised=False):
@@ -73,8 +70,6 @@ class SubMatrix(object):
 
         if self._log is not None:
             self._log.debug("Point division loaded from file")
-
-
 
         self._list_of_cells.load_mmap_data(not_normalised=not_normalised)
         #
