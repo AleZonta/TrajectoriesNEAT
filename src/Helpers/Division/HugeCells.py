@@ -1,6 +1,6 @@
 """
-TLSTM. Turing Learning system to generate trajectories
-Copyright (C) 2018  Alessandro Zonta (a.zonta@vu.nl)
+TrajectoriesNEAT. Towards a human-like movements generator based on environmental features
+Copyright (C) 2020  Alessandro Zonta (a.zonta@vu.nl)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -1,6 +1,6 @@
 """
-TLSTM. Turing Learning system to generate trajectories
-Copyright (C) 2018  Alessandro Zonta (a.zonta@vu.nl)
+TrajectoriesNEAT. Towards a human-like movements generator based on environmental features
+Copyright (C) 2020  Alessandro Zonta (a.zonta@vu.nl)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,14 +25,13 @@ from shapely.geometry import Point, LineString
 from shapely.ops import linemerge, unary_union, polygonize
 
 
-def __create_polygon(origin):
-    small = [origin[0][origin[1].vertices, 0], origin[0][origin[1].vertices, 1]]
-    a, b = zip(small)
-    r = [[a[0][i], b[0][i]] for i in range(len(a[0]))]
-    return geometry.Polygon(r)
-
-
 def __create_polygon_multiply(origin, multiplier):
+    """
+    Create polygon from data contain in origin
+    :param origin: polygon information
+    :param multiplier:
+    :return: shapely polygon object
+    """
     small = [origin[0][origin[1].vertices, 0], origin[0][origin[1].vertices, 1]]
     a, b = zip(small)
     r = [[a[0][i] * multiplier, b[0][i]] for i in range(len(a[0]))]
@@ -40,6 +39,12 @@ def __create_polygon_multiply(origin, multiplier):
 
 
 def cut_polygon_by_line(polygon, line):
+    """
+    Split polygon in two at the line location
+    :param polygon: original polygon
+    :param line: line where to split the polygon
+    :return: polygons resulted from the split
+    """
     merged = linemerge([polygon.boundary, line])
     borders = unary_union(merged)
     polygons = polygonize(borders)
@@ -47,6 +52,13 @@ def cut_polygon_by_line(polygon, line):
 
 
 def __get_graphs(path, name, multiplier):
+    """
+    Load polygon info from file
+    :param path: path where to find the information about the polygons
+    :param name: name of the files
+    :param multiplier:
+    :return: polygons loaded
+    """
     poly_a_graph_big = __create_polygon_multiply(
         origin=pickle.load(open("{}/{}_total.pickle".format(path, name), 'rb')), multiplier=multiplier)
     poly_a_graph_small = __create_polygon_multiply(
@@ -55,6 +67,16 @@ def __get_graphs(path, name, multiplier):
 
 
 def __get_figure(path, name, plot, line, reverse="normal", multiplier=1):
+    """
+    Define the fitness landscape
+    :param path: path where to find the polygons information
+    :param name: name of the file to read
+    :param plot: plot object where to plot the data
+    :param line: information about where to cut the original polygons
+    :param reverse: inversion of the big/small polygon resulted from the split
+    :param multiplier:
+    :return: fitness landscapes
+    """
     poly_a_graph_big, poly_a_graph_small = __get_graphs(path=path, name=name, multiplier=multiplier)
     centroid_small_area_original = poly_a_graph_small.centroid
 
@@ -95,13 +117,17 @@ def __get_figure(path, name, plot, line, reverse="normal", multiplier=1):
 
     plot.scatter([centroid_small_area_original.x], [centroid_small_area_original.y], s=20)
 
-
     return poly_a_graph_small, poly_a_graph_big, result_small
 
 
 def return_polygon_fitness_functions(save=False,
                                      path="/Users/alessandrozonta/PycharmProjects/LSTMGen/src/DistanceMetric/"):
-
+    """
+    Create the fitness landscapes
+    :param save: True if want to save the graphs, False if not -> only visualise them
+    :param path: where to save the files
+    :return:
+    """
     multiplier = 100
 
     fig, axes = plt.subplots(nrows=2, ncols=5, figsize=(20, 10))
@@ -187,49 +213,6 @@ def return_polygon_fitness_functions(save=False,
         path = root.replace("Helpers", "") + "/Data/"
         with open('{}/fitness_complete_all_behaviours.pickle'.format(path), 'wb') as handle:
             pickle.dump(vector, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-    # print(centroid_a.wkt)
-    # aa = Point(0., 0.)
-    # print(centroid_a.distance(aa))
-    #
-    # aa = Point(0., 5000.)
-    # print(centroid_a.distance(aa))
-    #
-    # aa = Point(2., 5000.)
-    # print(centroid_a.distance(aa))
-    #
-    # aa = Point(2., 0.)
-    # print(centroid_a.distance(aa))
-    #
-    # print("-------")
-    #
-    # print(centroid_b.wkt)
-    # aa = Point(0., 0.)
-    # print(centroid_b.distance(aa))
-    #
-    # aa = Point(0., 2500.)
-    # print(centroid_b.distance(aa))
-    #
-    # aa = Point(2., 2500.)
-    # print(centroid_b.distance(aa))
-    #
-    # aa = Point(2., 0.)
-    # print(centroid_b.distance(aa))
-    #
-    # print("-------")
-    #
-    # print(centroid_c.wkt)
-    # aa = Point(0., 0.)
-    # print(centroid_c.distance(aa))
-    #
-    # aa = Point(0., 5000.)
-    # print(centroid_c.distance(aa))
-    #
-    # aa = Point(2500., 5000.)
-    # print(centroid_c.distance(aa))
-    #
-    # aa = Point(2500., 0.)
-    # print(centroid_c.distance(aa))
 
 
 if __name__ == '__main__':

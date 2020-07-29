@@ -1,0 +1,7 @@
+# Trajectories-NEAT. Towards a human-like movements generator based on environmental features
+
+Trajectories-NEAT is a Python library implementing the NEAT experiment present in the paper "Towards a human-like movements generator based on environmental features".
+
+## Requirements
+ Tested only with `Python 3.6`
+* `numpy==1.18.5`

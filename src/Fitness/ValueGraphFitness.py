@@ -1,6 +1,6 @@
 """
-TLSTM. Turing Learning system to generate trajectories
-Copyright (C) 2018  Alessandro Zonta (a.zonta@vu.nl)
+TrajectoriesNEAT. Towards a human-like movements generator based on environmental features
+Copyright (C) 2020  Alessandro Zonta (a.zonta@vu.nl)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,6 +25,11 @@ MAX_TOTAL_FITNESS = MAX_FITNESS * 3
 
 
 def _get_max_fitness_possible(fitness_definition):
+    """
+    Based on the fitness defined by settings, return the max possible fitness achievable by the algorithm
+    :param fitness_definition: fitness chosen
+    :return: int max fitness
+    """
     if "mix" in fitness_definition:
         return Exception("Not okay to use this fitness types")
     elif fitness_definition == "novelty":
@@ -46,6 +51,15 @@ def _get_max_fitness_possible(fitness_definition):
 
 
 def _get_fitness_length_curliness(point, external, internal):
+    """
+    Return the fitness from the features length and curliness.
+    It used the fitness landscape defined and computes the distance to the important areas.
+    If inside the center hull returns 0, otherwise return the distance to the border of the hulls.
+    :param point: current features selected
+    :param external: external hull of the fitness landscape
+    :param internal: internal hull of the fitness landscape
+    :return: distance from the important area
+    """
     if internal.contains(point):
         actual_distance = 0
     elif external.contains(point):
@@ -58,6 +72,14 @@ def _get_fitness_length_curliness(point, external, internal):
 
 
 def _get_distance_to_center(point, internal, new_min=-300):
+    """
+    Return distance from current feature selected to the center of the hull selected.
+    It also normalised the value of the distance to new scale defined by global variable MAX_FITNESS
+    :param point: value for the features chosen
+    :param internal: information about the internal hull of the fitness landscape
+    :param new_min: minimum value of the new scale
+    :return: normalised and raw distance
+    """
     centroid = internal.centroid
     d = -distance.euclidean([centroid.x, centroid.y], [point.x, point.y])
     max_value = -5000
@@ -68,6 +90,15 @@ def _get_distance_to_center(point, internal, new_min=-300):
 
 
 def _get_combination_two_fitness_curliness_length(point, internal_normal, internal_special, external):
+    """
+    Return fitness value for the curliness and length features
+    Two cases, either the internal hull is considered as a plateau or the distance to the centroid is returned
+    :param point: current value for the two features chosen
+    :param internal_normal: information of the internal hull
+    :param internal_special: information of the internal hull with centroid
+    :param external: information about the external hull
+    :return: fitness value
+    """
     value_from_curliness_length = _get_fitness_length_curliness(point=point,
                                                                 external=external,
                                                                 internal=internal_normal)
@@ -81,6 +112,15 @@ def _get_combination_two_fitness_curliness_length(point, internal_normal, intern
 
 
 def _get_combination_two_fitness_curliness_distance(point, internal_normal, internal_special, external):
+    """
+    Return fitness value for the curliness and distance features
+    Two cases, either the internal hull is considered as a plateau or the distance to the centroid is returned
+    :param point: current value for the two features chosen
+    :param internal_normal: information of the internal hull
+    :param internal_special: information of the internal hull with centroid
+    :param external: information about the external hull
+    :return: fitness value
+    """
     value_from_curliness_distance = _get_fitness_length_curliness(point=point,
                                                                   external=external,
                                                                   internal=internal_normal)
@@ -94,6 +134,15 @@ def _get_combination_two_fitness_curliness_distance(point, internal_normal, inte
 
 
 def _get_combination_two_fitness_length_distance(point, internal_normal, internal_special, external):
+    """
+    Return fitness value for the distance and length features
+    Two cases, either the internal hull is considered as a plateau or the distance to the centroid is returned
+    :param point: current value for the two features chosen
+    :param internal_normal: information of the internal hull
+    :param internal_special: information of the internal hull with centroid
+    :param external: information about the external hull
+    :return: fitness value
+    """
     value_from_distance_length = _get_fitness_length_curliness(point=point, external=external,
                                                                internal=internal_normal)
     if value_from_distance_length == 0:
@@ -106,6 +155,15 @@ def _get_combination_two_fitness_length_distance(point, internal_normal, interna
 
 
 def get_fitness_value(length, curliness, fitness_landscape, further_distance, point_distance):
+    """
+    Get combined fitness function
+    :param length: current length of the trajectory
+    :param curliness: curliness of the trajectory
+    :param fitness_landscape: data defining the fitness landscape
+    :param further_distance: further distance to start of the trajectory
+    :param point_distance: modification to the fitness function
+    :return:
+    """
     point = Point(curliness * 100, length)
 
     if 0 in point_distance:
@@ -148,6 +206,15 @@ def get_fitness_value(length, curliness, fitness_landscape, further_distance, po
 
 
 def convert(old_max, old_min, new_max, new_min, old_value):
+    """
+    Convert value from range A to range B
+    :param old_max: max range A
+    :param old_min: min range A
+    :param new_max: max new range B
+    :param new_min: min new range B
+    :param old_value: value to convert
+    :return: value converted
+    """
     old_range = (old_max - old_min)
     new_range = (new_max - new_min)
     new_value = (((old_value - old_min) * new_range) / old_range) + new_min
@@ -155,6 +222,12 @@ def convert(old_max, old_min, new_max, new_min, old_value):
 
 
 def get_next_point(current_point, direction):
+    """
+    Given current position and direction to move, it returns the coordinates of the next point
+    :param current_point: current location
+    :param direction: direction to move
+    :return: next point
+    """
     x_value = current_point.x
     y_value = current_point.y
     if direction == 0:

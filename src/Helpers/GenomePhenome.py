@@ -1,6 +1,6 @@
 """
-TLSTM. Turing Learning system to generate trajectories
-Copyright (C) 2018  Alessandro Zonta (a.zonta@vu.nl)
+TrajectoriesNEAT. Towards a human-like movements generator based on environmental features
+Copyright (C) 2020  Alessandro Zonta (a.zonta@vu.nl)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,12 +15,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-import os
-
-import csv
 import json
 import pickle
-from pathlib import Path
 
 import numpy as np
 from tqdm import trange
@@ -50,7 +46,7 @@ class GenomeMeaning(object):
         self._order_name_and_position = None
         self.method_mmap = False
 
-    def load_data(self, test, performance=True):
+    def load_data(self, performance=True):
         """
         Load location data
 
@@ -61,7 +57,6 @@ class GenomeMeaning(object):
 
         If there are different tag in the file that are not in the Phenotype file, the tag is changed into others
 
-        :param test: if test is true, test files are loaded (with fewer elements)
         :return:
         """
         # loading coordinates
@@ -98,7 +93,6 @@ class GenomeMeaning(object):
             self.name_typologies = pickle.load(handle)
         self.method_mmap = True
 
-
         if self._log is not None:
             self._log.info("Coordinates loaded!")
         self._log = None
@@ -108,6 +102,10 @@ class GenomeMeaning(object):
             self.name_and_details = None
 
     def _save_name_and_position_to_mmap(self):
+        """
+        Save to mmap the information about the location to speed up the computation
+        :return:
+        """
         # save mmap name_and_position
         array = np.zeros((56, 938737, 2), dtype='float32')
         element_position = 0
@@ -220,4 +218,3 @@ class GenomeMeaning(object):
                         list_of_points_here.append(p)
             final_result[t] = list_of_points_here
         return final_result
-

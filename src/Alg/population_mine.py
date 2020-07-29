@@ -1,6 +1,6 @@
 """
-TLSTM. Turing Learning system to generate trajectories
-Copyright (C) 2018  Alessandro Zonta (a.zonta@vu.nl)
+TrajectoriesNEAT. Towards a human-like movements generator based on environmental features
+Copyright (C) 2020  Alessandro Zonta (a.zonta@vu.nl)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -72,17 +72,6 @@ class PopulationWithNovelty(Population):
 
             # Evaluate all genomes using the user-provided function.
             fitness_function(list(iteritems(self.population)), (self.config, self._archive))
-
-            # data_to_save = []
-            # for ind in self.population:
-            #     data_to_save.append([self.population[ind].real_fitness,
-            #                          self.population[ind].behaviour,
-            #                          self.population[ind].novelty_score,
-            #                          self.population[ind].fitness,
-            #                          self.population[ind].variances_good_trajectories,
-            #                          self.population[ind].all_the_data])
-            # with open("{}population_and_fitness_generation_{}.pkl".format(self._output_directory, k), "wb") as cp_file:
-            #     pickle.dump(data_to_save, cp_file, protocol=pickle.HIGHEST_PROTOCOL)
 
             # Gather and report statistics.
             best = None

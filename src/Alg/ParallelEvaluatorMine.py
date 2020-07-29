@@ -1,6 +1,6 @@
 """
-TLSTM. Turing Learning system to generate trajectories
-Copyright (C) 2018  Alessandro Zonta (a.zonta@vu.nl)
+TrajectoriesNEAT. Towards a human-like movements generator based on environmental features
+Copyright (C) 2020  Alessandro Zonta (a.zonta@vu.nl)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -42,6 +42,14 @@ class ParallelEvaluatorMine(ParallelEvaluator):
         self._fitness_definition = fitness_definition
 
     def evaluate(self, genomes, config):
+        """
+        Evaluate the genome
+        It produces the trajectories, return the fitness values and then based on the fitness set on config it produces
+        the real fitness value that is going to be used to select the next individuals
+        :param genomes:
+        :param config:
+        :return:
+        """
         archive = config[1]
         config = config[0]
         jobs = []

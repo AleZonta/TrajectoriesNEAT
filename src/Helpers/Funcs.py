@@ -1,6 +1,6 @@
 """
-TLSTM. Turing Learning system to generate trajectories
-Copyright (C) 2018  Alessandro Zonta (a.zonta@vu.nl)
+TrajectoriesNEAT. Towards a human-like movements generator based on environmental features
+Copyright (C) 2020  Alessandro Zonta (a.zonta@vu.nl)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -87,6 +87,12 @@ def is_in_list(list_of_points, point_to_check):
 
 
 def _get_direction(current_point, next_point):
+    """
+    From the current point return the vector defining the decision the model follow to move to the next point
+    :param current_point: current location
+    :param next_point: point just moved on
+    :return: vector specifying the decision the model made to go to the next point. Vector 8 positions one-hot encoded
+    """
     x_value = int(current_point.x)
     y_value = int(current_point.y)
     x_value_next = int(next_point.x)

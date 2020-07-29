@@ -1,6 +1,6 @@
 """
-TLSTM. Turing Learning system to generate trajectories
-Copyright (C) 2018  Alessandro Zonta (a.zonta@vu.nl)
+TrajectoriesNEAT. Towards a human-like movements generator based on environmental features
+Copyright (C) 2020  Alessandro Zonta (a.zonta@vu.nl)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,7 +21,9 @@ from neat.math_util import mean, stdev
 from neat.reporting import BaseReporter
 from neat.six_util import itervalues, iterkeys
 
-
+"""
+Extend the base reporter that comes with the NEAT package to add mlflow and the normal logger to it
+"""
 class MineReporter(BaseReporter):
     """Uses `mlflow and logger` to output information about the run"""
     def __init__(self, show_species_detail, logger, mlflow):

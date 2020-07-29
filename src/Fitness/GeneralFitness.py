@@ -1,6 +1,6 @@
 """
-TLSTM. Turing Learning system to generate trajectories
-Copyright (C) 2018  Alessandro Zonta (a.zonta@vu.nl)
+TrajectoriesNEAT. Towards a human-like movements generator based on environmental features
+Copyright (C) 2020  Alessandro Zonta (a.zonta@vu.nl)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -45,6 +45,12 @@ COMPASS_BRACKETS = ["N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"]
 
 
 def compute_direction(origin, destination):
+    """
+    Return the cardinal direction of the trajectory given first point and last point
+    :param origin: first point of the trajectory
+    :param destination: last point of the trajectory
+    :return: compass direction
+    """
     deltaX = destination.x - origin.x
     deltaY = destination.y - origin.y
     degrees_temp = math.atan2(deltaX, deltaY) / math.pi * 180
@@ -58,6 +64,12 @@ def compute_direction(origin, destination):
 
 
 def compute_direction_angle(origin, destination):
+    """
+    Return the direction in degrees of the trajectory given first point and last point
+    :param origin: first point of the trajectory
+    :param destination: last point of the trajectory
+    :return: direction in degrees
+    """
     deltaX = destination.x - origin.x
     deltaY = destination.y - origin.y
     degrees_temp = math.atan2(deltaX, deltaY) / math.pi * 180

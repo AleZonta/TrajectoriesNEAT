@@ -1,6 +1,6 @@
 """
-TLSTM. Turing Learning system to generate trajectories
-Copyright (C) 2018  Alessandro Zonta (a.zonta@vu.nl)
+TrajectoriesNEAT. Towards a human-like movements generator based on environmental features
+Copyright (C) 2020  Alessandro Zonta (a.zonta@vu.nl)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,7 +25,9 @@ from src.Helpers.Division.ComputeDivision import SubMatrix
 from src.Helpers.GenomePhenome import GenomeMeaning
 from src.Settings.arguments import args
 
-
+"""
+Test the winning genome with the test points
+"""
 def worker_job_lib_winning_genome(starting_point, genome, config, point_distance):
     loader_apf = LoadAPF(path="{}/the_right_one_fast".format(args.data_directory),
                          logger=None)
@@ -37,7 +39,7 @@ def worker_job_lib_winning_genome(starting_point, genome, config, point_distance
     net = neat.nn.FeedForwardNetwork.create(genome, config)
 
     loader_genome_meaning = GenomeMeaning(logger=None)
-    loader_genome_meaning.load_data(test=False)
+    loader_genome_meaning.load_data()
 
     sub_matrix = SubMatrix(log=None, apf=loader_apf.apf,
                            list_points=loader_genome_meaning.name_typologies,
