@@ -17,3 +17,15 @@ Trajectories-NEAT is a Python library implementing the NEAT experiment present i
 * `tables==3.6.1`
 * `tqdm==4.41.0`
 * `pyarrow==0.15.1`
+
+## Data
+Download the dataset used from [here](https://doi.org/10.5281/zenodo.3964449) and place it in data.
+Update path on the setting file accordingly
+
+## Run the experiments
+* check if all the path are corrects in the settings of the various scripts
+* to generate new trajectories run src/Main.py
+* use `--fitness_definition` to select which kind of fitness you want to use. To obtain the result shown in the paper, use "normal_direction_five"
+* use `--numb_of_tra` to define how many trajectories to generate. By default the system support multiprocessing
+* use `--point_distancel` if you want to modify the behaviour of the fitness based A*. Check `args.py` to see what are the selection for this argument
+
